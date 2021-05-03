@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: simple-k8s-deployment
+spec:
+    replicas: 3
+    selector:
+       matchLabels:
+          app: simple-k8s-app
+    template:
+       metadata:
+          labels:
+             app: simple-k8s-app
+       spec:
+          containers:
+          - name: simple-k8s
+            image: abslord/simple-k8s:v1
+            ports:
+              - name: default
+                containerPort: 80
+            livenessProbe:
+              httpGet:
+                port: 80
+                path: /
+              initialDelaySeconds: 10
+              periodSeconds: 5
+              timeoutSeconds: 2
+            readinessProbe:
+              httpGet:
+                port: 80
+                path: /health
+              initialDelaySeconds: 10
+              periodSeconds: 5
